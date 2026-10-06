@@ -1,0 +1,50 @@
+seed: 20260829
+device: cuda
+
+model:
+  name: forenid_net
+  noiseprint_weights: weights/noiseprint++.th
+  mit_b2_weights: weights/segformers/mit_b2.pth
+  freeze_noiseprint: true
+  noise_channels: 16
+  decoder_embed_dim: 256
+  nfa_init_alpha: 0.1
+  nfa_gated_scales: [1, 2, 3]
+  fusion_mode: learned_gate
+  use_noiseprint: true
+
+data:
+  type: general
+  root: .
+  image_size: 512
+  keep_aspect_ratio: true
+  pad_value: 255
+  heavy_degrade: false
+  train:
+    list: data_lists/general_pretrain_train.txt
+  valid:
+    list: data_lists/general_pretrain_valid.txt
+
+loss:
+  mask_focal_weight: 0.7
+  mask_dice_weight: 0.7
+  score_weight: 1.0
+  focal_alpha: 0.35
+  focal_gamma: 2.0
+
+eval:
+  max_metric_pixels: 2000000
+  small_region_ratio: 0.02
+
+train:
+  epochs: 25
+  batch_size: 2
+  num_workers: 4
+  lr: 0.0001
+  min_lr: 0.000001
+  warmup_epochs: 1
+  weight_decay: 0.02
+  freeze_backbone_stages: 0
+  amp: true
+  best_metric: image_auc
+  output_dir: outputs/pretrain_general

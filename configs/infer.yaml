@@ -1,0 +1,26 @@
+device: cuda
+
+model:
+  name: forenid_net
+  noiseprint_weights: weights/noiseprint++.th
+  mit_b2_weights: weights/segformers/mit_b2.pth
+  freeze_noiseprint: true
+  noise_channels: 16
+  decoder_embed_dim: 256
+  nfa_init_alpha: 0.1
+  nfa_gated_scales: [1, 2, 3]
+  fusion_mode: learned_gate
+  use_noiseprint: true
+
+data:
+  type: doc
+  image_size: 512
+  keep_aspect_ratio: true
+  pad_value: 255
+  heavy_degrade: false
+
+eval:
+  image_threshold: 0.3233
+  mask_threshold: 0.4300
+  max_metric_pixels: 2000000
+  small_region_ratio: 0.02

@@ -1,0 +1,33 @@
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+.vscode/
+.venv/
+venv/
+
+# Raw datasets and generated artifacts
+data/
+outputs/
+checkpoints/
+runs/
+wandb/
+
+# Large model files. Noiseprint++ is the only intentionally tracked weight.
+*.pth
+*.pt
+*.ckpt
+*.tar
+weights/*.download
+
+# Local documents and operating-system files
+*.doc
+*.docx
+*.pdf
+*.tif
+*.tiff
+Thumbs.db
+.DS_Store

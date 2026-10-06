@@ -1,0 +1,60 @@
+protocol_version: fantasyid_v1
+selection_metric: image_auc
+selection_split: dev
+test_splits: [internal_test, external_clean_test]
+seeds: [20260829, 20260830, 20260831, 20260832, 20260833]
+
+primary:
+  final_heavy_degradation:
+    fusion_mode: learned_gate
+    heavy_degrade: true
+    role: predeclared final model
+
+fusion_controls:
+  rgb_only:
+    fusion_mode: rgb_only
+  noise_only:
+    fusion_mode: noise_only
+  simple_add:
+    fusion_mode: simple_add
+  simple_concat:
+    fusion_mode: simple_concat
+  fixed_gate:
+    fusion_mode: fixed_gate
+    nfa_init_alpha: 0.1
+  additive_gate:
+    fusion_mode: additive_gate
+  learned_multiplicative_gate:
+    fusion_mode: learned_gate
+
+training_controls:
+  from_scratch:
+    initialization: random
+    fantasyid_finetune: true
+  pretraining_only:
+    initialization: general_pretraining_checkpoint
+    fantasyid_finetune: false
+  no_heavy_degradation:
+    heavy_degrade: false
+
+degradation_component_controls:
+  - remove_jpeg
+  - remove_blur
+  - remove_low_resolution
+  - remove_perspective
+  - remove_moire
+  - remove_print_scan_texture
+  - remove_noise
+  - remove_light_variation
+
+fairness_contract:
+  common_input_size: 512
+  common_train_groups: true
+  common_dev_groups: true
+  common_epoch_budget: 25
+  common_augmentation_budget: true
+  common_checkpoint_rule: development_image_auc
+  common_threshold_rule: development_only
+  report_parameter_count: true
+  report_trainable_parameter_count: true
+  label_untrainable_official_models: transfer_only

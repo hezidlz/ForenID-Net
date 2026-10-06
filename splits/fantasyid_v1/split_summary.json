@@ -1,0 +1,159 @@
+{
+  "seed": 20260829,
+  "group_definition": "filename stem",
+  "template_definition": "prefix before first hyphen",
+  "partitions": {
+    "train": {
+      "samples": 1323,
+      "groups": 147,
+      "labels": {
+        "0": 441,
+        "1": 882
+      },
+      "attack_types": {
+        "face_text": 882,
+        "none": 441
+      },
+      "devices": {
+        "huawei": 441,
+        "iphone15pro": 441,
+        "scan": 441
+      },
+      "templates": {
+        "arabic": 135,
+        "chinese": 144,
+        "french": 144,
+        "indian": 90,
+        "persian": 108,
+        "portugal": 180,
+        "russian": 99,
+        "turkiye": 153,
+        "ukraine": 108,
+        "usa": 162
+      }
+    },
+    "dev": {
+      "samples": 384,
+      "groups": 32,
+      "labels": {
+        "0": 96,
+        "1": 288
+      },
+      "attack_types": {
+        "face_text": 192,
+        "none": 96,
+        "text": 96
+      },
+      "devices": {
+        "huawei": 128,
+        "iphone15pro": 128,
+        "scan": 128
+      },
+      "templates": {
+        "arabic": 36,
+        "chinese": 48,
+        "french": 36,
+        "indian": 24,
+        "persian": 36,
+        "portugal": 48,
+        "russian": 24,
+        "turkiye": 48,
+        "ukraine": 36,
+        "usa": 48
+      }
+    },
+    "internal_test": {
+      "samples": 384,
+      "groups": 32,
+      "labels": {
+        "0": 96,
+        "1": 288
+      },
+      "attack_types": {
+        "face_text": 192,
+        "none": 96,
+        "text": 96
+      },
+      "devices": {
+        "huawei": 128,
+        "iphone15pro": 128,
+        "scan": 128
+      },
+      "templates": {
+        "arabic": 48,
+        "chinese": 36,
+        "french": 48,
+        "indian": 24,
+        "persian": 24,
+        "portugal": 48,
+        "russian": 36,
+        "turkiye": 48,
+        "ukraine": 24,
+        "usa": 48
+      }
+    },
+    "external_clean_test": {
+      "samples": 599,
+      "groups": 100,
+      "labels": {
+        "0": 300,
+        "1": 299
+      },
+      "attack_types": {
+        "face": 150,
+        "none": 300,
+        "text": 149
+      },
+      "devices": {
+        "huawei": 199,
+        "iphone15": 200,
+        "scan": 200
+      },
+      "templates": {
+        "chinese2": 245,
+        "netherland": 186,
+        "singapore": 168
+      }
+    }
+  },
+  "conditional_localization_only": {
+    "samples": 594,
+    "groups": 198,
+    "labels": {
+      "1": 594
+    },
+    "attack_types": {
+      "text": 594
+    },
+    "devices": {
+      "huawei": 198,
+      "iphone15pro": 198,
+      "scan": 198
+    },
+    "templates": {
+      "arabic": 54,
+      "chinese": 75,
+      "french": 60,
+      "indian": 57,
+      "persian": 51,
+      "portugal": 63,
+      "russian": 45,
+      "turkiye": 78,
+      "ukraine": 51,
+      "usa": 60
+    }
+  },
+  "group_overlap_matrix": {
+    "train__dev": 0,
+    "train__internal_test": 0,
+    "train__external_clean_test": 0,
+    "dev__internal_test": 0,
+    "dev__external_clean_test": 0,
+    "internal_test__external_clean_test": 0
+  },
+  "hash_audit": {
+    "exact_cross_split_records": 0,
+    "near_cross_split_pairs": 6641,
+    "phash_distance": 4
+  }
+}

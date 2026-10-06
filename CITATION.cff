@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the ForenID-Net manuscript."
+title: "ForenID-Net: Document Image Forgery Detection for Digital Identity Verification in Finance"
+type: software
+authors:
+  - family-names: Chen
+    given-names: Shi
+  - family-names: Jiang
+    given-names: Zhaozhe
+  - family-names: Zuo
+    given-names: Shikun
+  - family-names: Lin
+    given-names: Cankai
+  - family-names: Zheng
+    given-names: Ruoxin
+  - family-names: Chen
+    given-names: Bichao
+  - family-names: Lv
+    given-names: Xiaoting
+  - family-names: Pang
+    given-names: Shanmin
+  - family-names: Wang
+    given-names: Chenxu
+version: 1.0.0
+date-released: 2026-10-07
