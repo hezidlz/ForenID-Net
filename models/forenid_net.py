@@ -8,23 +8,21 @@ import torch.nn.functional as F
 
 from .decoder import MLPDecoder
 from .fusion_variants import NoiseOnlyPyramid, build_fusion_variant
-from .mit_b2 import MiTB2Backbone
 from .nfa_lite import NFALiteGate
 from .noiseprint import NoiseprintAdapter, NoiseprintExtractor
 from .score_head import MaskAwareScoreHead
+from .sparsevit_backbone import SparseViTBackbone
 
 
 class ForenIDNet(nn.Module):
-    """Dual-branch document forgery detector with a MiT-B2 RGB backbone."""
-
-    feature_channels = MiTB2Backbone.feature_channels
+    """Dual-branch document forgery detector with a SparseViT RGB backbone."""
 
     def __init__(
         self,
         noiseprint_weights: str | Path | None = None,
-        mit_b2_weights: str | Path | None = None,
-        image_size: int = 512,
         freeze_noiseprint: bool = True,
+        embed_dims: tuple[int, int, int, int] = (32, 64, 160, 256),
+        sparsevit_depths: tuple[int, int, int, int] = (2, 2, 4, 2),
         decoder_embed_dim: int = 256,
         noise_channels: int = 16,
         nfa_init_alpha: float = 0.1,
@@ -36,10 +34,11 @@ class ForenIDNet(nn.Module):
         self.fusion_mode = str(fusion_mode).lower()
         self.use_noiseprint = bool(use_noiseprint) and self.fusion_mode != "rgb_only"
         self.noise_channels = int(noise_channels)
+        self.feature_channels = tuple(int(value) for value in embed_dims)
 
-        self.backbone = MiTB2Backbone(
-            image_size=image_size,
-            pretrained_path=mit_b2_weights,
+        self.backbone = SparseViTBackbone(
+            embed_dims=self.feature_channels,
+            depths=tuple(int(value) for value in sparsevit_depths),
         )
 
         if self.use_noiseprint:
@@ -58,7 +57,9 @@ class ForenIDNet(nn.Module):
             if self.fusion_mode == "noise_only"
             else None
         )
-        self.learned_gate = (
+        # Keep the historical ``nfa_lite`` module name so existing SparseViT
+        # checkpoints load without state-dict key remapping.
+        self.nfa_lite = (
             NFALiteGate(
                 feature_channels=self.feature_channels,
                 noise_channels=self.noise_channels,
@@ -124,9 +125,9 @@ class ForenIDNet(nn.Module):
             fused_features = self.noise_only_pyramid(noise_feature)
             gates = []
         elif self.fusion_mode == "learned_gate":
-            if self.learned_gate is None:
+            if self.nfa_lite is None:
                 raise RuntimeError("learned_gate fusion is not initialized")
-            fused_features, gates = self.learned_gate(rgb_features, noise_feature)
+            fused_features, gates = self.nfa_lite(rgb_features, noise_feature)
         else:
             if self.fusion is None:
                 raise RuntimeError(f"Fusion mode {self.fusion_mode!r} is not initialized")
@@ -161,12 +162,11 @@ class ForenIDNet(nn.Module):
 
 def build_model_from_config(cfg: dict) -> ForenIDNet:
     model_cfg = cfg.get("model", {})
-    data_cfg = cfg.get("data", {})
     return ForenIDNet(
         noiseprint_weights=model_cfg.get("noiseprint_weights"),
-        mit_b2_weights=model_cfg.get("mit_b2_weights"),
-        image_size=int(data_cfg.get("image_size", 512)),
         freeze_noiseprint=bool(model_cfg.get("freeze_noiseprint", True)),
+        embed_dims=tuple(model_cfg.get("embed_dims", [32, 64, 160, 256])),
+        sparsevit_depths=tuple(model_cfg.get("sparsevit_depths", [2, 2, 4, 2])),
         decoder_embed_dim=int(model_cfg.get("decoder_embed_dim", 256)),
         noise_channels=int(model_cfg.get("noise_channels", 16)),
         nfa_init_alpha=float(model_cfg.get("nfa_init_alpha", 0.1)),

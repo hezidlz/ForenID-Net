@@ -1,11 +1,12 @@
-seed: 20260829
+seed: 42
 device: cuda
 
 model:
   name: forenid_net
   noiseprint_weights: weights/noiseprint++.th
-  mit_b2_weights: weights/segformers/mit_b2.pth
   freeze_noiseprint: true
+  embed_dims: [32, 64, 160, 256]
+  sparsevit_depths: [2, 2, 4, 2]
   noise_channels: 16
   decoder_embed_dim: 256
   nfa_init_alpha: 0.1
@@ -26,10 +27,10 @@ data:
     list: data_lists/general_pretrain_valid.txt
 
 loss:
-  mask_focal_weight: 0.7
-  mask_dice_weight: 0.7
-  score_weight: 1.0
-  focal_alpha: 0.35
+  mask_focal_weight: 1.0
+  mask_dice_weight: 1.0
+  score_weight: 0.5
+  focal_alpha: 0.25
   focal_gamma: 2.0
 
 eval:
@@ -37,14 +38,14 @@ eval:
   small_region_ratio: 0.02
 
 train:
-  epochs: 25
-  batch_size: 2
+  epochs: 60
+  batch_size: 4
   num_workers: 4
-  lr: 0.0001
+  lr: 0.0002
   min_lr: 0.000001
-  warmup_epochs: 1
-  weight_decay: 0.02
+  warmup_epochs: 2
+  weight_decay: 0.05
   freeze_backbone_stages: 0
   amp: true
-  best_metric: image_auc
+  best_metric: pixel_f1
   output_dir: outputs/pretrain_general

@@ -252,7 +252,7 @@ def print_markdown(rows: list[dict[str, Any]]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser("Evaluate FantasyID by attack type and device.")
-    parser.add_argument("--config", default="configs/forenid_mit_b2.yaml")
+    parser.add_argument("--config", default="configs/forenid_sparsevit.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--root", default="datasets/FantasyID/FantasyID")
     parser.add_argument("--csv", default="test.csv", help="FantasyID csv under --root.")

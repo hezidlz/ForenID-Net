@@ -3,9 +3,9 @@
 Official code release for **ForenID-Net: Document Image Forgery Detection for
 Digital Identity Verification in Finance**.
 
-ForenID-Net uses a frozen Noiseprint++ residual extractor, a four-stage MiT-B2
-RGB backbone, noise-guided learnable multiplicative gates, a SegFormer-style
-localization decoder, and a mask-aware image-level classifier. It produces an
+ForenID-Net uses a frozen Noiseprint++ residual extractor, a compact four-stage
+SparseViT RGB backbone, noise-guided learnable multiplicative gates, a
+multi-scale localization decoder, and a mask-aware image-level classifier. It produces an
 image forgery score and a suspicious-region map from RGB pixels only; it does
 not require OCR, a document template, MRZ parsing, or metadata.
 
@@ -15,9 +15,9 @@ not require OCR, a document template, MRZ parsing, or metadata.
 
 | Component | Configuration |
 |---|---|
-| RGB backbone | MiT-B2 |
-| Feature channels | 64, 128, 320, 512 |
-| Transformer depths | 3, 4, 6, 3 |
+| RGB backbone | SparseViT |
+| Feature channels | 32, 64, 160, 256 |
+| Stage depths | 2, 2, 4, 2 |
 | Feature resolutions | 1/4, 1/8, 1/16, 1/32 |
 | Noise branch | Frozen Noiseprint++ plus a trainable 16-channel adapter |
 | Gated scales | F2, F3, F4 |
@@ -25,7 +25,7 @@ not require OCR, a document template, MRZ parsing, or metadata.
 | Decoder width | 256 |
 | Input | Letterboxed 512 x 512 RGB image |
 
-The main configuration is `configs/forenid_mit_b2.yaml`. Fusion controls used
+The main configuration is `configs/forenid_sparsevit.yaml`. Fusion controls used
 by the ablation runner include RGB-only, noise-only, simple addition, simple
 concatenation, fixed multiplicative gating, learnable additive gating, and the
 final learnable multiplicative gate.
@@ -41,12 +41,12 @@ python -m venv .venv
 # Linux/macOS: source .venv/bin/activate
 # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python scripts/download_pretrained_weights.py mit_b2
 ```
 
-The small Noiseprint++ checkpoint is included for reproducibility. The MiT-B2
-checkpoint is downloaded from the official TruFor repository and verified by
-SHA-256. See `weights/README.md` and `THIRD_PARTY_NOTICES.md`.
+The small frozen Noiseprint++ checkpoint is included for reproducibility and is
+verified by SHA-256. SparseViT is initialized during general forgery
+pretraining; the resulting `best.pth` is then used to initialize FantasyID
+fine-tuning. See `weights/README.md` and `THIRD_PARTY_NOTICES.md`.
 
 ## Data
 
@@ -79,7 +79,7 @@ FantasyID fine-tuning:
 
 ```bash
 python train.py \
-  --config configs/forenid_mit_b2.yaml \
+  --config configs/forenid_sparsevit.yaml \
   --resume outputs/pretrain_general/best.pth
 ```
 
@@ -87,8 +87,8 @@ The paper protocol uses seeds `20260829` through `20260833`. Override YAML
 values from the command line, for example:
 
 ```bash
-python train.py --config configs/forenid_mit_b2.yaml \
-  seed 20260830 train.output_dir outputs/forenid_mit_b2_seed_20260830
+python train.py --config configs/forenid_sparsevit.yaml \
+  seed 20260830 train.output_dir outputs/forenid_sparsevit_seed_20260830
 ```
 
 ## Frozen-threshold evaluation
@@ -99,8 +99,8 @@ once with frozen thresholds:
 ```bash
 python scripts/evaluate_revision_protocol.py \
   --repository . \
-  --config configs/forenid_mit_b2.yaml \
-  --checkpoint outputs/forenid_mit_b2_seed_20260829/best.pth \
+  --config configs/forenid_sparsevit.yaml \
+  --checkpoint outputs/forenid_sparsevit_seed_20260829/best.pth \
   --root data/FantasyID/FantasyID \
   --dev-list splits/fantasyid_v1/lists/fantasyid_dev.txt \
   --test internal_test=splits/fantasyid_v1/lists/fantasyid_internal_test.txt \
@@ -148,7 +148,7 @@ files are not stored in Git because of size and dataset-distribution limits.
 python -m pytest -q
 ```
 
-The smoke tests verify MiT-B2 feature dimensions and the end-to-end output
+The smoke tests verify SparseViT feature dimensions and the end-to-end output
 contract. GitHub Actions runs the same checks on each push and pull request.
 
 ## Scope of localization claims
@@ -160,11 +160,10 @@ supervision, not as exact boundary recovery.
 
 ## Third-party terms
 
-Noiseprint++, its pretrained checkpoint and the MiT-B2 initialization are from
-TruFor and remain subject to its informational/nonprofit-use license. Required
-notices are preserved in the root `LICENSE` and in `third_party/licenses/`.
-The CMX-derived MiT implementation also retains its MIT notice. Dataset
-licenses apply separately. No dataset images are included in this repository.
+Noiseprint++ and its pretrained checkpoint are distributed with TruFor and
+remain subject to its informational/nonprofit-use license. Required notices are
+preserved in the root `LICENSE` and in `third_party/licenses/`. Dataset licenses
+apply separately. No dataset images are included in this repository.
 
 ## Citation
 

@@ -253,7 +253,7 @@ def write_summary(rows: list[dict[str, Any]], output_root: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser("Run FantasyID ablation experiments for ForenID-Net.")
-    parser.add_argument("--base-config", default="configs/forenid_mit_b2.yaml")
+    parser.add_argument("--base-config", default="configs/forenid_sparsevit.yaml")
     parser.add_argument("--pretrained", default="outputs/pretrain_general_all/best_model_only.pth")
     parser.add_argument("--output-root", default="outputs/ablations_fantasyid")
     parser.add_argument("--root", default="data/FantasyID/FantasyID")

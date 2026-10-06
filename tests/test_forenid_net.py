@@ -5,9 +5,9 @@ from models.forenid_net import ForenIDNet
 
 def test_rgb_only_forward_contract() -> None:
     model = ForenIDNet(
-        image_size=64,
         noiseprint_weights=None,
-        mit_b2_weights=None,
+        embed_dims=(16, 32, 64, 128),
+        sparsevit_depths=(1, 1, 1, 1),
         fusion_mode="rgb_only",
         use_noiseprint=False,
     ).eval()
@@ -21,9 +21,9 @@ def test_rgb_only_forward_contract() -> None:
 
 def test_learned_gate_with_distributed_noiseprint_weight() -> None:
     model = ForenIDNet(
-        image_size=64,
         noiseprint_weights="weights/noiseprint++.th",
-        mit_b2_weights=None,
+        embed_dims=(16, 32, 64, 128),
+        sparsevit_depths=(1, 1, 1, 1),
         fusion_mode="learned_gate",
     ).eval()
     with torch.no_grad():

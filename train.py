@@ -60,7 +60,7 @@ def build_loader(dataset, cfg: dict, train: bool):
 
 def main() -> None:
     parser = argparse.ArgumentParser("Train ForenID-Net")
-    parser.add_argument("--config", default="configs/forenid_mit_b2.yaml")
+    parser.add_argument("--config", default="configs/forenid_sparsevit.yaml")
     parser.add_argument("--resume", default="")
     parser.add_argument("opts", nargs=argparse.REMAINDER)
     args = parser.parse_args()

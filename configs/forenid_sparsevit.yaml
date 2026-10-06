@@ -4,8 +4,9 @@ device: cuda
 model:
   name: forenid_net
   noiseprint_weights: weights/noiseprint++.th
-  mit_b2_weights: weights/segformers/mit_b2.pth
   freeze_noiseprint: true
+  embed_dims: [32, 64, 160, 256]
+  sparsevit_depths: [2, 2, 4, 2]
   noise_channels: 16
   decoder_embed_dim: 256
   nfa_init_alpha: 0.1
@@ -49,4 +50,4 @@ train:
   freeze_backbone_stages: 2
   amp: true
   best_metric: image_auc
-  output_dir: outputs/forenid_mit_b2_seed_20260829
+  output_dir: outputs/forenid_sparsevit_seed_20260829

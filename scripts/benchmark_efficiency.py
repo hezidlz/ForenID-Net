@@ -346,7 +346,7 @@ def environment_stats(torch_mod: Any, device: Any) -> dict[str, Any]:
 
 def build_argparser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser("Benchmark ForenID-Net efficiency")
-    parser.add_argument("--config", default="configs/forenid_mit_b2.yaml")
+    parser.add_argument("--config", default="configs/forenid_sparsevit.yaml")
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--device", default=None, help="Default: config device, then cuda if available.")
     parser.add_argument("--image-size", type=int, default=None, help="Synthetic input size. Default: data.image_size.")

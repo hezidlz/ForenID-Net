@@ -9,7 +9,7 @@ class NFALiteGate(nn.Module):
     """Noise-guided feature amplification.
 
     Noiseprint++ produces a residual prior. This module converts it to
-    scale-specific gates and multiplicatively amplifies MiT-B2 features.
+    scale-specific gates and multiplicatively amplifies SparseViT features.
     """
 
     def __init__(
