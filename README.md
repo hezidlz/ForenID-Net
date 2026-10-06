@@ -145,7 +145,7 @@ files are not stored in Git because of size and dataset-distribution limits.
 ## Tests
 
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
 The smoke tests verify MiT-B2 feature dimensions and the end-to-end output
